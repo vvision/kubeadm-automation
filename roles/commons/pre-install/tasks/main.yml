@@ -1,14 +1,21 @@
 ---
+- name: Create directory for Kubernetes key
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+
 - name: Add Kubernetes APT GPG key
   when: ansible_os_family == "Debian"
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key
+    dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
+    mode: '0644'
 
 - name: Add Kubernetes APT repository
   when: ansible_os_family == "Debian"
-  apt_repository:
-    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+  ansible.builtin.apt_repository:
+    repo: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/{{ kube_version }}/deb/ /
+#    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
     state: present
     filename: 'kubernetes'
 
@@ -49,7 +56,7 @@
     mode: 0755
 
 - name: Copy kubeadm conf to drop-in directory
-  template: 
+  template:
     src: 20-extra-args.conf.j2
     dest: /etc/systemd/system/kubelet.service.d/20-extra-args.conf
 

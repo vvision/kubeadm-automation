@@ -1,5 +1,5 @@
 # Kubernetes
-kube_package_version: 1.20.11
+kube_package_version: 1.28
 kube_version: v{{ kube_package_version }}
 token: b0f7b8.8d1767876297d85c
 
