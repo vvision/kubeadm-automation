@@ -9,6 +9,21 @@ Deploy the Kubernetes cluster :
 vagrant up
 ```
 
+Cluster nodes status:
+```sh
+vagrant status
+```
+
+Connect to the control plane node:
+```sh
+vagrant ssh k8s-master
+```
+
+Halt nodes:
+```sh
+vagrant halt
+```
+
 Remove the Kubernetes cluter :
 ```sh
 vagrant destroy -f
